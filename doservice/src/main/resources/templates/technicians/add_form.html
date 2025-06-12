@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>AdminLTE 3 | Starter</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{fragments/top-menu :: topMenu}"></div>
+
+    <div th:replace="~{fragments/side-menu :: sideMenu}"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Users Form</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/technicians}">Technician</a></li>
+                            <li class="breadcrumb-item active">Technician Form</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">User Form</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form th:action="@{/technicians/save}" th:object="${technicianUserDto}" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <!-- Leva kolona -->
+                                    <div class="col-md-6">
+                                        <!-- Ime i prezime -->
+                                        <div class="form-group">
+                                            <label>First Name</label>
+                                            <input type="text" th:field="*{firstName}" class="form-control" placeholder="Enter first name">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" th:field="*{lastName}" class="form-control" placeholder="Enter last name">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                                        </div>
+                                        <!-- Email i telefon -->
+                                        <div class="form-group">
+                                            <label>Technician Email</label>
+                                            <input type="email" th:field="*{technicianEmail}" class="form-control" placeholder="Enter technician email">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('technicianEmail')}" th:errors="*{technicianEmail}"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Phone</label>
+                                            <input type="text" th:field="*{phone}" class="form-control" placeholder="Enter phone">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                                        </div>
+                                        <!-- Status -->
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select th:field="*{status}" class="form-control">
+                                                <option value="" disabled>Select status</option>
+                                                <option value="ACTIVE">Active</option>
+                                                <option value="INACTIVE">Inactive</option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                                        </div>
+                                        <!-- Specialization -->
+                                        <div class="form-group">
+                                            <label>Specialization</label>
+                                            <select th:field="*{specializationId}" class="form-control">
+                                                <option value="" disabled>Select specialization</option>
+                                                <option th:each="spec : ${specializations}"
+                                                        th:value="${spec.id}" th:text="${spec.name}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('specializationId')}" th:errors="*{specializationId}"></div>
+                                        </div>
+                                        <!-- Location -->
+                                        <div class="form-group">
+                                            <label>Location</label>
+                                            <select th:field="*{locationId}" class="form-control">
+                                                <option value="" disabled>Select location</option>
+                                                <option th:each="loc : ${locations}"
+                                                        th:value="${loc.id}" th:text="${loc.name}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('locationId')}" th:errors="*{locationId}"></div>
+                                        </div>
+                                        <!-- Employment date -->
+                                        <div class="form-group">
+                                            <label>Employment Date</label>
+                                            <input type="datetime-local" th:field="*{employmentDate}" class="form-control">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('employmentDate')}" th:errors="*{employmentDate}"></div>
+                                        </div>
+                                        <!-- Slika -->
+                                        <div class="form-group">
+                                            <label>Choose Profile Photo</label>
+                                            <input type="file" th:field="*{profileImageFile}" class="form-control">
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Desna kolona -->
+                                    <div class="col-md-6">
+                                        <!-- Username -->
+                                        <div class="form-group">
+                                            <label>Username</label>
+                                            <input type="text" th:field="*{username}" class="form-control" placeholder="Enter username">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                                        </div>
+                                        <!-- User email -->
+                                        <div class="form-group">
+                                            <label>User Email</label>
+                                            <input type="email" th:field="*{userEmail}" class="form-control" placeholder="Enter user email">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></div>
+                                        </div>
+                                        <!-- Password -->
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input type="password" th:field="*{password}" class="form-control" placeholder="Enter password">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                                        </div>
+                                        <!-- Role -->
+                                        <div class="form-group">
+                                            <label>Role</label>
+                                            <select th:field="*{roleId}" class="form-control">
+                                                <option value="" disabled>Select role</option>
+                                                <option  th:value="2" th:text="TECHNICIAN"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('roleId')}" th:errors="*{roleId}"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <a th:href="@{/technicians}" class="btn btn-outline-secondary">Cancel</a>
+                                </div>
+                            </form>
+
+
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+
+    <div th:replace="~{fragments/footer-menu :: footerMenu}"></div>
+</div>
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+    <!-- Bootstrap 4 -->
+    <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script th:src="@{/dist/js/adminlte.min.js}"></script>
+    <script th:src="@{/plugins/jquery-ui/jquery-ui.min.js}"></script>
+
+</body>
+</html>
