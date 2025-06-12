@@ -19,14 +19,14 @@ public class FileUploadController {
         this.fileStorageService = fileStorageService;
     }
 
-    // Upload endpoint
+
     @PostMapping("/upload")
     public UploadResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String url = fileStorageService.store(file);
         return new UploadResponse(url, "File uploaded successfully!");
     }
 
-    // Download endpoint (ako baš želiš preko API, ali nije neophodno za slike)
+
     @GetMapping("/download/{filename:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
         Resource file = fileStorageService.loadAsResource(filename);
@@ -35,7 +35,7 @@ public class FileUploadController {
                 .body(file);
     }
 
-    // DTO za odgovor
+
     public static class UploadResponse {
         private String url;
         private String message;

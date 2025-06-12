@@ -44,11 +44,7 @@ public class TaskService {
         this.taskFileRepository = taskFileRepository;
         this.fileStorageService = fileStorageService;
     }
-    // =================== DTO <-> Entity ===================
 
-
-
-    // =================== CRUD & Pretraga ===================
 
     public List<Task> getAllActive () {
         return taskRepository.findByDeletedAtIsNull();

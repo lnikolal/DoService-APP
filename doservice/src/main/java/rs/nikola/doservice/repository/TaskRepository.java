@@ -16,34 +16,34 @@ import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    // Svi taskovi koji nisu soft-deleted
+
     List<Task> findByDeletedAtIsNull();
 
-    // Paginacija za aktivne
+
     Page<Task> findByDeletedAtIsNull(Pageable pageable);
 
-    // Po statusu (PENDING, COMPLETED, IN_PROGRESS, ...)
+
     List<Task> findByTaskStatusAndDeletedAtIsNull(TaskStatus taskStatus);
 
     Page<Task> findByTaskStatusAndDeletedAtIsNull(TaskStatus taskStatus, Pageable pageable);
 
-    // Pronađi taskove za određenog tehničara (many-to-many)
+
     List<Task> findByTechnicians_IdAndDeletedAtIsNull(Long id);
 
-    // Pronađi po klijentovom imenu (delimično poklapanje), case-insensitive
+
     List<Task> findByClientNameContainingIgnoreCaseAndDeletedAtIsNull(String clientName);
 
-    // Taskovi kreirani u zadatom periodu
+
     List<Task> findByAssignedDateBetweenAndDeletedAtIsNull(LocalDateTime start, LocalDateTime end);
 
-    // Top N taskova po statusu, sortirano po datumu dodele (za dashboard)
+
     List<Task> findTop3ByTaskStatus_NameOrderByAssignedDateDesc(String statusName);
 
     List<Task> findAllByTaskStatus_NameAndDeletedAtIsNull(String statusName);
-    // Pronađi task po ID-u, ali samo ako nije obrisan
+
     Optional<Task> findByIdAndDeletedAtIsNull(Long id);
 
-    // Pronađi taskove po više statusa (lista statusa)
+
     List<Task> findByTaskStatus_NameInAndDeletedAtIsNull(List<String> statusNames);
 
 

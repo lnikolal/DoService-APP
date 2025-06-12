@@ -30,19 +30,16 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    // === LISTANJE I PRETRAGE ===
-
-    // Listaj sve aktivne (neobrisane) korisnike
     public List<User> getAllActive() {
         return userRepository.findByDeletedAtIsNull();
     }
 
-    // Paginacija aktivnih korisnika
+
     public Page<User> getAllActive(Pageable pageable) {
         return userRepository.findByDeletedAtIsNull(pageable);
     }
 
-    // Dohvati korisnika po ID-u (samo ako nije obrisan)
+
     public User getById(Long id) {
         return userRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));

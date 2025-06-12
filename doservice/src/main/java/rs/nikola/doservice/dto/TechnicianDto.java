@@ -11,11 +11,11 @@ public class TechnicianDto {
     private String lastName;
     private String email;
     private String phone;
-    private String status; // ili može TechnicianStatus ako želiš
+    private String status;
     private Long specializationId;
-    private String specializationName; // opcionalno
+    private String specializationName;
     private Long locationId;
-    private String locationName; // opcionalno
+    private String locationName;
     private LocalDateTime employmentDate;
     private String profileImageUrl;
     private MultipartFile profileImageFile;
