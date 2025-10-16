@@ -112,8 +112,6 @@ Most of the **key features are implemented**, providing a functional system for 
 - Dashboard with task status cards  
 - User & technician management interface
 
-# 🛠️ DoService – Service Intervention Management System
-
 ---
 
 ## 🚀 Quick Start
