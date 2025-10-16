@@ -33,7 +33,8 @@ public class FileStorageService {
             Path dest = root.resolve(filename);
 
             Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
-            return filename;
+
+            return "/uploads/"+filename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file.", e);
         }

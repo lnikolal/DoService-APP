@@ -36,12 +36,119 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Main content -->
         <section class="content">
 
-            <div class="container-fluid">
 
-                <div class="row">
+            <div class="row">
+                <!-- PENDING -->
+                <div class="col-lg-3 col-6" th:if="${tasksPending != null and  #lists.size(tasksPending) > 0}">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3 >TASK</h3>
+                            <p>Pending Tasks</p>
+                            <ul class="list-unstyled mt-3">
+                                <li th:each="task : ${tasksPending}">
+                                    <b th:text="${task.clientName}"></b> |
+                                    <span th:text="${task.serviceType.name}"></span><br>
+                                    <span th:text="'Contact: ' + ${task.clientContact}"></span><br>
+                                    <span th:text="'Address: ' + ${task.clientAddress}"></span><br>
+                                    <span th:if="${task.description != null && !task.description.isEmpty()}"
+                                          th:text="'Description: ' + ${task.description}"></span>
+                                    <hr class="my-1">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <a th:href="@{/tasks/status?status=PENDING}" class="small-box-footer">
+                           Show All<i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
 
+                <!-- IN PROGRESS -->
+                <div class="col-lg-3 col-6" th:if="${tasksInProgress != null and #lists.size(tasksInProgress)>0}">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3 >TASK</h3>
+                            <p>In Progress Tasks</p>
+                            <ul class="list-unstyled mt-3">
+                                <li th:each="task : ${tasksInProgress}">
+                                    <b th:text="${task.clientName}"></b> |
+                                    <span th:text="${task.serviceType.name}"></span><br>
+                                    <span th:text="'Contact: ' + ${task.clientContact}"></span><br>
+                                    <span th:text="'Address: ' + ${task.clientAddress}"></span><br>
+                                    <span th:if="${task.description != null && !task.description.isEmpty()}"
+                                          th:text="'Description: ' + ${task.description}"></span>
+                                    <hr class="my-1">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                        <a th:href="@{/tasks/status?status=IN PROGRESS}" class="small-box-footer">
+                            Show All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- COMPLETED -->
+                <div class="col-lg-3 col-6" th:if="${tasksCompleted != null and #lists.size(tasksCompleted)>0}">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3 >TASK</h3>
+                            <p>Completed Tasks</p>
+                            <ul class="list-unstyled mt-3">
+                                <li th:each="task : ${tasksCompleted}">
+                                    <b th:text="${task.clientName}"></b> |
+                                    <span th:text="${task.serviceType.name}"></span><br>
+                                    <span th:text="'Contact: ' + ${task.clientContact}"></span><br>
+                                    <span th:text="'Address: ' + ${task.clientAddress}"></span><br>
+                                    <span th:if="${task.description != null && !task.description.isEmpty()}"
+                                          th:text="'Description: ' + ${task.description}"></span>
+                                    <hr class="my-1">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <a th:href="@{/tasks/status?status=COMPLETED}" class="small-box-footer">
+                            Show All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CANCELLED -->
+                <div class="col-lg-3 col-6" th:if="${tasksCancelled != null and #lists.size(tasksCancelled)>0 }">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3 >TASK</h3>
+                            <p>Cancelled Tasks</p>
+                            <ul class="list-unstyled mt-3">
+                                <li th:each="task : ${tasksCancelled}">
+                                    <b th:text="${task.clientName}"></b> |
+                                    <span th:text="${task.serviceType.name}"></span><br>
+                                    <span th:text="'Contact: ' + ${task.clientContact}"></span><br>
+                                    <span th:text="'Address: ' + ${task.clientAddress}"></span><br>
+                                    <span th:if="${task.description != null && !task.description.isEmpty()}"
+                                          th:text="'Description: ' + ${task.description}"></span>
+                                    <hr class="my-1">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <a th:href="@{/tasks/status?status=CANCELLED}" class="small-box-footer">
+                           Show All<i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            </div>
+
+
+
         </section>
 
 

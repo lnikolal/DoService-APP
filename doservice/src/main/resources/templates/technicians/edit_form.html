@@ -120,7 +120,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <!-- Prikaz trenutnog zaposlenja -->
                                             <small class="form-text text-muted">
                                                 Current:
-                                                <span th:text="${technicianDto.employmentDate != null} ? #temporals.format(technicianDto.employmentDate, 'dd.MM.yyyy. HH:mm') : 'Not set'"></span>
+                                                <span th:text="${technicianDto.employmentDate != null ? #temporals.format(technicianDto.employmentDate, 'dd.MM.yyyy. HH:mm') : 'Not set'}"></span>
+
                                             </small>
                                         </div>
                                         <!-- Upload slike -->

@@ -29,6 +29,7 @@ public interface TechnicianRepository extends JpaRepository<Technician, Long> {
     List<Technician> findBySpecializationAndDeletedAtIsNull(Specialization specialization);
 
 
+
     Page<Technician> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseAndDeletedAtIsNull(
             String firstName, String lastName, Pageable pageable);
 

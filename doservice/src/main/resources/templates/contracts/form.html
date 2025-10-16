@@ -1,10 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>AdminLTE 3 | Contract Form</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<body>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{fragments/top-menu :: topMenu}"></div>
+    <div th:replace="~{fragments/side-menu :: sideMenu}"></div>
 
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="${contractDto.id != null} ? 'Edit Contract' : 'Create Contract'">Contract Form</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/contracts}">Contracts</a></li>
+                            <li class="breadcrumb-item active" th:text="${contractDto.id != null} ? 'Edit' : 'Create'"></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="${contractDto.id != null} ? 'Edit Contract' : 'Create Contract'"></h3>
+                            </div>
+
+                            <!-- CREATE Contract -->
+                            <form th:if="${contractDto.id == null}"
+                                  th:action="@{/contracts/save}"
+                                  th:object="${contractDto}"
+                                  method="post"
+                                  enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}" />
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Technician</label>
+                                            <select th:field="*{technicianId}" class="form-control" required>
+                                                <option value="" disabled>Select technician</option>
+                                                <option th:each="tech : ${technicians}" th:value="${tech.id}" th:text="${tech.firstName + ' ' + tech.lastName}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('technicianId')}" th:errors="*{technicianId}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Position</label>
+                                            <select th:field="*{positionId}" class="form-control" required>
+                                                <option value="" disabled>Select position</option>
+                                                <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('positionId')}" th:errors="*{positionId}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Salary</label>
+                                            <input type="number" min="1" th:field="*{salary}" class="form-control" placeholder="Salary" required>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Start Date</label>
+                                            <input type="date" th:field="*{startDate}" class="form-control" required>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>End Date</label>
+                                            <input type="date" th:field="*{endDate}" class="form-control">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Upload novih PDF fajlova -->
+                                    <div class="form-group">
+                                        <label>Contract PDF Files</label>
+                                        <input type="file" th:field="*{contractFiles}" accept="application/pdf" class="form-control" multiple>
+
+                                        <small class="form-text text-muted">Upload one or more PDF files.</small>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('contractFiles')}" th:errors="*{contractFiles}"></div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Create Contract</button>
+                                    <a th:href="@{/contracts}" class="btn btn-outline-secondary">Cancel</a>
+                                </div>
+                            </form>
+
+                            <!-- EDIT Contract -->
+                            <form th:if="${contractDto.id != null}"
+                                  th:action="@{/contracts/edit/{id}(id=${contractDto.id})}"
+                                  th:object="${contractDto}"
+                                  method="post"
+                                  enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}" />
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Technician</label>
+                                            <select th:field="*{technicianId}" class="form-control" required>
+                                                <option value="" disabled>Select technician</option>
+                                                <option th:each="tech : ${technicians}" th:value="${tech.id}" th:text="${tech.firstName + ' ' + tech.lastName}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('technicianId')}" th:errors="*{technicianId}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Position</label>
+                                            <select th:field="*{positionId}" class="form-control" required>
+                                                <option value="" disabled>Select position</option>
+                                                <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('positionId')}" th:errors="*{positionId}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Salary</label>
+                                            <input type="number" min="1" th:field="*{salary}" class="form-control" placeholder="Salary" required>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Start Date</label>
+                                            <input type="date" th:field="*{startDate}" class="form-control" required>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>End Date</label>
+                                            <input type="date" th:field="*{endDate}" class="form-control">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Upload novih PDF fajlova -->
+                                    <div class="form-group">
+                                        <label>Contract PDF Files</label>
+                                        <input type="file" th:field="*{contractFiles}" accept="application/pdf" class="form-control" multiple>
+                                        <small class="form-text text-muted">Upload one or more PDF files.</small>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('contractFiles')}" th:errors="*{contractFiles}"></div>
+                                    </div>
+                                    <!-- Prikaz postojećih fajlova -->
+                                    <div class="form-group" th:if="${contractFiles != null}">
+                                        <label>Existing Contract Files:</label>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-2" th:each="file : ${contractFiles}">
+                                                <a th:href="@{${file.fileUrl}}" target="_blank" class="btn btn-sm btn-secondary mt-1">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                    <span th:text="${file.createdAt}"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Upload novih -->
+                                    <div class="form-group">
+                                        <label>Upload Additional PDFs</label>
+                                        <input type="file" name="contractFiles" class="form-control" multiple>
+                                    </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Update Contract</button>
+                                    <a th:href="@{/contracts}" class="btn btn-outline-secondary">Cancel</a>
+                                </div>
+                                </div>>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div th:replace="~{fragments/footer-menu :: footerMenu}"></div>
+</div>
+<script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+<script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
 </body>
 </html>

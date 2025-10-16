@@ -4,9 +4,12 @@ package rs.nikola.doservice.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import rs.nikola.doservice.entity.Contract;
+import rs.nikola.doservice.entity.ContractFile;
 import rs.nikola.doservice.entity.Position;
 import rs.nikola.doservice.entity.Technician;
+import rs.nikola.doservice.repository.ContractFileRepository;
 import rs.nikola.doservice.repository.ContractRepository;
 
 import java.time.LocalDateTime;
@@ -18,9 +21,12 @@ import java.util.Optional;
 public class ContractService {
 
     private final ContractRepository contractRepository;
-
-    public ContractService(ContractRepository contractRepository) {
+    private final ContractFileRepository contractFileRepository;
+    private final FileStorageService fileStorageService;
+    public ContractService(ContractRepository contractRepository,ContractFileRepository contractFileRepository,FileStorageService fileStorageService) {
         this.contractRepository = contractRepository;
+        this.contractFileRepository = contractFileRepository;
+        this.fileStorageService = fileStorageService;
     }
 
 
@@ -66,21 +72,22 @@ public class ContractService {
 
     public Contract save(Contract contract) {
         contract.setCreatedAt(LocalDateTime.now());
+        contract.setUpdatedAt(LocalDateTime.now());
         contract.setDeletedAt(null);
         return contractRepository.save(contract);
     }
 
-
-    public Contract update(Long id, Contract data) {
+    public Contract update(Long id, Contract newData) {
         Contract existing = getById(id);
-        existing.setPosition(data.getPosition());
-        existing.setSalary(data.getSalary());
-        existing.setEndDate(data.getEndDate());
+        existing.setPosition(newData.getPosition());
+        existing.setTechnician(newData.getTechnician());
+        existing.setSalary(newData.getSalary());
+        existing.setStartDate(newData.getStartDate());
+        existing.setEndDate(newData.getEndDate());
         existing.setUpdatedAt(LocalDateTime.now());
 
         return contractRepository.save(existing);
     }
-
 
     public void softDelete(Long id) {
         Contract contract = getById(id);

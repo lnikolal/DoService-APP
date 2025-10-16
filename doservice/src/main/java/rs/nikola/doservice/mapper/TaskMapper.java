@@ -45,10 +45,16 @@ public class TaskMapper {
             );
         }
 
+
         if (task.getTaskFiles() != null) {
             dto.setTaskFileIds(
                     task.getTaskFiles().stream()
                             .map(TaskFile::getId)
+                            .collect(Collectors.toSet())
+            );
+            dto.setTaskFileUrls(
+                    task.getTaskFiles().stream()
+                            .map(TaskFile::getFileUrl)
                             .collect(Collectors.toSet())
             );
         }

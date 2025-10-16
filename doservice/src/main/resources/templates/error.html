@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Greška</title>
+</head>
+<body>
+<h1>Došlo je do greške</h1>
+<p th:text="'Status: ' + ${status}"></p>
+<p th:text="'Greška: ' + ${error}"></p>
+<p th:text="'Putanja: ' + ${path}"></p>
+
+<a href="/dashboard">⟵ Vrati se na dashboard</a>
+</body>
+</html>

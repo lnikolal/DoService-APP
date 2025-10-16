@@ -91,6 +91,11 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
+    @GetMapping("/status")
+    public String showTaskByStatus(@RequestParam String status, Model model) {
+        model.addAttribute("tasks",taskService.getByStatusName(status));
+        return "tasks/list";
+    }
 
     @GetMapping("/{id}")
     public String taskDetails(@PathVariable Long id, Model model) {

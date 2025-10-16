@@ -100,7 +100,7 @@ public class TaskService {
         return taskRepository.findByIdAndDeletedAtIsNull(id).isPresent();
     }
 
-    // =================== Kreiranje, ažuriranje, brisanje ===================
+
 
     public Task create(TaskDto dto) {
         ServiceType serviceType = null;
@@ -238,4 +238,10 @@ public class TaskService {
         task.setTaskStatus(taskStatusService.findByName(status).orElseThrow());
         taskRepository.save(task);
     }
+
+    public List<Task> findTop3ByLastDate(String status){
+        return taskRepository.findAllByTaskStatus_NameAndDeletedAtIsNull(status);
+    }
+
+
 }

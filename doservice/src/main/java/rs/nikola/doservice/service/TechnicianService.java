@@ -30,50 +30,45 @@ public class TechnicianService {
         this.fileStorageService = fileStorageService;
     }
 
-    // List all active technicians
+
     public List<Technician> getAllActive() {
         return technicianRepository.findByDeletedAtIsNull();
     }
 
-    // Paginated listing of all active technicians
+
     public Page<Technician> getAllActive(Pageable pageable) {
         return technicianRepository.findByDeletedAtIsNull(pageable);
     }
 
-    // Get by ID (only if not deleted)
+
     public Technician getById(Long id) {
         return technicianRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new NoSuchElementException("Technician not found"));
     }
 
-    // Search by first or last name (paginated, only active)
-    public Page<Technician> searchByName(String query, Pageable pageable) {
-        return technicianRepository
-                .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseAndDeletedAtIsNull(query, query, pageable);
-    }
 
-    // Filter by status
+
+
     public List<Technician> getByStatus(TechnicianStatus status) {
         return technicianRepository.findByStatusAndDeletedAtIsNull(status);
     }
 
-    // Filter by location
+
     public List<Technician> getByLocation(Location location) {
         return technicianRepository.findByLocationAndDeletedAtIsNull(location);
     }
 
-    // Filter by specialization
+
     public List<Technician> getBySpecialization(Specialization specialization) {
         return technicianRepository.findBySpecializationAndDeletedAtIsNull(specialization);
     }
 
-    // Filter by status, location, specialization (paginated)
-    public Page<Technician> filter(TechnicianStatus status, Location location, Specialization specialization, Pageable pageable) {
-        return technicianRepository
-                .findByStatusAndLocationAndSpecializationAndDeletedAtIsNull(status, location, specialization, pageable);
-    }
 
-    // Create new technician
+
+
+
+
+
     public Technician save(Technician technician) {
 
         if (emailExists(technician.getEmail())) {
@@ -87,7 +82,7 @@ public class TechnicianService {
         return technicianRepository.save(technician);
     }
 
-    // Update existing technician
+
     public Technician update(Long id, Technician data) {
         Technician existing = getById(id);
         existing.setFirstName(data.getFirstName());
@@ -217,5 +212,7 @@ public class TechnicianService {
             technician.setStatus(TechnicianStatus.valueOf(status));
             technicianRepository.save(technician);
         }
+
+
 
 }

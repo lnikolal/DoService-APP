@@ -6,7 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import rs.nikola.doservice.dto.UserDto;
 import rs.nikola.doservice.entity.Role;
+import rs.nikola.doservice.entity.Technician;
 import rs.nikola.doservice.entity.User;
 import rs.nikola.doservice.repository.RoleRepository;
 import rs.nikola.doservice.repository.UserRepository;
@@ -20,14 +22,16 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+    private final PasswordEncoder passwordEncoder;
 
     private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getAllActive() {
@@ -86,6 +90,47 @@ public class UserService {
     }
 
 
+    public User saveFromDto(UserDto dto) {
+        User user;
+        boolean isNew = (dto.getId() == null);
+
+        if (isNew) {
+            user = new User();
+            user.setCreatedAt(LocalDateTime.now());
+        } else {
+            user = getById(dto.getId());
+        }
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        if (dto.getRoleId() != null) {
+            Role role = roleRepository.findById(dto.getRoleId())
+                    .orElseThrow(() -> new NoSuchElementException("Role not found"));
+            user.setRole(role);
+        }
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setDeletedAt(null);
+
+        if (isNew) {
+            if (usernameExists(user.getUsername()))
+                throw new IllegalArgumentException("Username already exists!");
+            if (emailExists(user.getEmail()))
+                throw new IllegalArgumentException("Email already exists!");
+        } else {
+
+            if (userRepository.existsByUsernameAndDeletedAtIsNull(dto.getUsername()) && !user.getUsername().equals(dto.getUsername())) {
+                throw new IllegalArgumentException("Username already exists!");
+            }
+            if (userRepository.existsByEmailAndDeletedAtIsNull(dto.getEmail()) && !user.getEmail().equals(dto.getEmail())) {
+                throw new IllegalArgumentException("Email already exists!");
+            }
+        }
+        return userRepository.save(user);
+    }
 
 
     public User update(Long id, User data) {
@@ -102,6 +147,7 @@ public class UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public void softDelete(Long id) {
         User user = getById(id);
+
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
     }

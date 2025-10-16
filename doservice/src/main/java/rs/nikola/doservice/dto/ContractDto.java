@@ -1,6 +1,8 @@
 
 package rs.nikola.doservice.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,14 +15,13 @@ public class ContractDto {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private List<Long> contractFileIds;
+    private List<MultipartFile> contractFiles; // ili MultipartFile[] contractFiles;
 
-    public List<Long> getContractFileIds() {
-        return contractFileIds;
+    public List<MultipartFile> getContractFiles() {
+        return contractFiles;
     }
-
-    public void setContractFileIds(List<Long> contractFileIds) {
-        this.contractFileIds = contractFileIds;
+    public void setContractFiles(List<MultipartFile> contractFiles) {
+        this.contractFiles = contractFiles;
     }
 
     public Long getId() { return id; }

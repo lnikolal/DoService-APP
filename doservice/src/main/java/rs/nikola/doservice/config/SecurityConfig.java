@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import rs.nikola.doservice.security.ApiAuthenticationEntryPoint;
+import rs.nikola.doservice.security.WebAccessDeniedHandler;
 import rs.nikola.doservice.service.CustomUserDetailsService;
 
 @Configuration
@@ -27,38 +29,61 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+
+
+    }
+    @Bean
+    public ApiAuthenticationEntryPoint apiAuthenticationEntryPoint() {
+        return new ApiAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public WebAccessDeniedHandler webAccessDeniedHandler() {
+        return new WebAccessDeniedHandler();
     }
 
 //    @Bean
 //    public AuthenticationProvider authenticationProvider() {
 //        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//        provider.setUserDetailsService(userDetailsService); // tvoj servis
+//        provider.setUserDetailsService(userDetailsService);
 //        provider.setPasswordEncoder(passwordEncoder());
 //        return provider;
 //    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, ApiAuthenticationEntryPoint entryPoint, WebAccessDeniedHandler accessDeniedHandler) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
-                        .requestMatchers("/technician/**").hasAnyRole("ADMIN", "MANAGER","TECHNICIAN")
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/technician/**").hasAnyRole("ADMIN", "MANAGER", "TECHNICIAN")
                         .anyRequest().permitAll()
                 )
-               .formLogin(form -> form
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(entryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
+
+                // REST klijenti koriste Basic Auth
+                .httpBasic(Customizer.withDefaults())
+
+                // Web korisnici koriste form login
+                .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
-                ).httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
-                /*.logout(logout -> logout
+                )
+
+                .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-                )*/;
+                );
+
         return http.build();
     }
 }
