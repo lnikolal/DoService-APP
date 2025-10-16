@@ -114,6 +114,88 @@ Most of the **key features are implemented**, providing a functional system for 
 
 ---
 
+## 🚀 Quick Start
+
+### 1. 📥 Clone the Repository
+```bash
+git clone <YOUR_REPOSITORY_URL>
+cd doservice
+```
+*(If you've set the Git root to `doservice`, you can skip the `cd doservice` step.)*
+
+---
+
+### 2. 🛠️ Run the Application
+
+#### If you're using the Maven Wrapper (included in the project):
+```bash
+./mvnw spring-boot:run
+```
+
+#### Or if Maven is installed globally:
+```bash
+mvn spring-boot:run
+```
+
+The application will start at:  
+👉 [http://localhost:8080](http://localhost:8080)
+
+---
+
+### 3. 🧪 Dummy Users
+
+| Role         | Email/Username         | Password | Access Level                                  |
+|--------------|-------------------------|----------|-----------------------------------------------|
+| Admin        | `admin@doservice.com`   | `admin`  | Full access to all resources                  |
+| Manager      | `manager@doservice.com` | `manager`| Almost full access except user deletion      |
+| Technician   | `milan.p` (example)     | `tech`   | Access only to their assigned tasks & data   |
+
+📌 Passwords are dummy values — in production they are stored as encrypted hashes.
+
+---
+
+### 4. 🧭 Routes
+
+| Feature                    | URL             |
+|----------------------------|------------------|
+| Login page                 | `/login`         |
+| Dashboard                  | `/dashboard`     |
+| User management            | `/users`         |
+| Task management            | `/tasks`         |
+| Technician management      | `/technicians`   |
+| Contract management        | `/contracts`     |
+
+---
+
+## 🗃️ Setting Up the Dummy Database
+
+The project contains an SQL dump file (`dump_do_service_db_v2.sql`) that automatically creates all tables and fills them with test data.
+
+### 1. Create a MySQL database (or use an existing one)
+```bash
+mysql -u root -p
+CREATE DATABASE do_service_test_db;
+EXIT;
+```
+
+### 2. Import the dump file
+```bash
+mysql -u root -p do_service_test_db < dump_do_service_db_v2.sql
+```
+
+### 3. Configure the connection in `application.properties`:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/do_service_test_db
+spring.datasource.username=root
+spring.datasource.password=YOUR_PASSWORD
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+✅ After starting the application, the dummy data will be loaded and ready for testing.
+
+---
+
 ## 📝 License
 
 This project is released for educational and demonstrational purposes.  
